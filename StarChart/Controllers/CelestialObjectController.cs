@@ -18,21 +18,16 @@ namespace StarChart.Controllers
         [HttpGet("{id:int}", Name = "GetById")]
         public IActionResult GetById(int id)
         {
-            var celestialObject = _context.CelestialObjects
-                .FirstOrDefault(co => co.Id == id);
+            var celestialObject = _context.CelestialObjects.Find(id);
 
             if (celestialObject == null)
             {
                 return NotFound();
             }
 
-            var orbitedObject = _context.CelestialObjects
-                .FirstOrDefault(oo => oo.Id == celestialObject.OrbitedObjectId);
-            
-            if (orbitedObject != null)
-            {
-                orbitedObject.Satellites.Add(celestialObject);
-            }
+            celestialObject.Satellites = _context.CelestialObjects
+                .Where(cos => cos.OrbitedObjectId == celestialObject.Id)
+                .ToList();
 
             return Ok(celestialObject);
         }
@@ -51,13 +46,9 @@ namespace StarChart.Controllers
 
             foreach (var celestialObject in celestialObjects)
             {
-                var orbitedObject = _context.CelestialObjects
-                    .FirstOrDefault(oo => oo.Id == celestialObject.OrbitedObjectId);
-            
-                if (orbitedObject != null)
-                {
-                    orbitedObject.Satellites.Add(celestialObject);
-                }
+                celestialObject.Satellites = _context.CelestialObjects
+                    .Where(cos => cos.OrbitedObjectId == celestialObject.Id)
+                    .ToList();
             }
             
             return Ok(celestialObjects);
@@ -76,13 +67,9 @@ namespace StarChart.Controllers
 
             foreach (var celestialObject in celestialObjects)
             {
-                var orbitedObject = _context.CelestialObjects
-                    .FirstOrDefault(oo => oo.Id == celestialObject.OrbitedObjectId);
-            
-                if (orbitedObject != null)
-                {
-                    orbitedObject.Satellites.Add(celestialObject);
-                }
+                celestialObject.Satellites = _context.CelestialObjects
+                    .Where(cos => cos.OrbitedObjectId == celestialObject.Id)
+                    .ToList();
             }
             
             return Ok(celestialObjects);
